@@ -22,12 +22,15 @@ Route::namespace('Station')->group(function(){
 
     Route::prefix('station')->group(function(){
         //sensors
-        Route::resource('/sensors', 'AdressesController');
+        //Route::resource('/sensors', 'AdressesController');
 
         //stations
-        Route::resource('/stations', 'AdressesController');
+        //Route::resource('/stations', 'AdressesController');
 
         //data
-        Route::resource('/data', 'AdressesController');
+        //Route::resource('/data', 'AdressesController');
+
+        //user
+        Route::resource('/user', 'UserController');
     });
 });
