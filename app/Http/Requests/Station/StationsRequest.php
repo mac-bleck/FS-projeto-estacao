@@ -4,7 +4,7 @@ namespace App\Http\Requests\Station;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SensorsRequest extends FormRequest
+class StationsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class SensorsRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => ['required', 'string', 'max:255'],
-            'partnumber' => ['string', 'max:255'],
-            'description' => ['string', 'max:255'],
-            'stations_id' => 'required'
+            'name' => ['required', 'string', 'max:255'],
+            'locality' => ['string', 'string', 'max:255'],
+            'user_id' => 'required'
         ];
     }
 }

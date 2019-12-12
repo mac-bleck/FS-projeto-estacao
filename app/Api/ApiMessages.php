@@ -2,9 +2,18 @@
 
 namespace App\Api;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApiMessages extends Model
+class ApiMessages
 {
-    //
+    private $msg = [];
+
+    public function __construct(string $message, array $data = [])
+    {
+        $this->msg['message']  = $message;
+        $this->msg['errors'] = $data;
+    }
+
+    public function getMessage()
+    {
+        return $this->msg;
+    }
 }

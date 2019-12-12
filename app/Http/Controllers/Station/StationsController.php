@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Station;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Sensors;
 use App\Stations;
+use App\User;
 use App\Api\ApiMessages;
-use App\Http\Requests\Station\SensorsRequest;
+use App\Http\Requests\Station\StationsRequest;
 
-class SensorsController extends Controller
+class StationsController extends Controller
 {
 
-    private $sensors;
+    private $stations;
 
-    public function __construct(Sensors $sensors)
+    public function __construct(Stations $stations)
     {
-        $this->sensors = $sensors;
+        $this->stations = $stations;
     }
 
     /**
@@ -24,23 +24,9 @@ class SensorsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        //(banner, notic, galery)
-        try {
-            
-            $type = ($request->has('type') && $request->get('type')) ? [['type', 'like', $request->get('type').'%']] : [];
-            $pag = ($request->has('paginate') && $request->get('paginate')) ? $request->get('paginate') : '10';
-
-            $sensors = $this->sensors->where($type)
-                                     ->paginate($pag);
-            
-            return response()->json($sensors, 200);
-
-        } catch (\Exception $e) {
-            $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
-        }
+        //
     }
 
     /**
@@ -59,21 +45,21 @@ class SensorsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SensorsRequest $request)
+    public function store(StationsRequest $request)
     {
+        $data = $request->all();
+
         try {
+            $user = User::findOrFail($request->get('user_id'));
 
-            $station = Stations::findOrFail($request->get('stations_id'));
-
-            $station->sensors()->firstOrCreate([
-                    'type' => $request->get('type'),
-                    'partnumber' => $request->get('partnumber'),	
-                    'description' => $request->get('description')
+            $user->stations()->firstOrCreate([
+                        'name' => $request->get('name'),
+                        'locality' => $request->get('locality')
                     ]);
-            
+
             return response()->json([
                 'data' => [
-                    'msg' => 'Sensor criado com sucesso'
+                    'msg' => 'Estação criada com sucesso'
                 ]
             ], 201); //registro criado
 
@@ -91,7 +77,18 @@ class SensorsController extends Controller
      */
     public function show($id)
     {
-        //
+        /*try {
+            
+            $stations = $this->stations->with('sensors')->findOrFail($id);
+
+            return response()->json([
+                'data' => $stations
+            ], 200);
+
+        } catch (\Exception $e) {
+            $msg = new ApiMessages($e->getMessage());
+            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+        }*/
     }
 
     /**
@@ -114,7 +111,27 @@ class SensorsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        /*$data = $request->all();
+
+        try {
+
+            $stations = $this->stations->findOrFail($id);
+            $stations->update($data);
+            
+            $sensors = ($request->has('sensors') && $request->get('sensors')[0]) ? $request->get('sensors') : [];
+
+            $news->photo_gallery()->createMany($info_photos);
+
+            return response()->json([
+                'data' => [
+                    'msg' => 'Noticia atualizada com sucesso'
+                ]
+            ], 202);
+
+        } catch (\Exception $e) {
+            $msg = new ApiMessages($e->getMessage());
+            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+        }*/
     }
 
     /**

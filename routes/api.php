@@ -22,13 +22,13 @@ Route::namespace('Station')->group(function(){
 
     Route::prefix('station')->group(function(){
         //sensors
-        //Route::resource('/sensors', 'AdressesController');
+        Route::resource('/sensors', 'SensorsController');
 
         //stations
-        //Route::resource('/stations', 'AdressesController');
+        Route::resource('/stations', 'StationsController');
 
         //data
-        //Route::resource('/data', 'AdressesController');
+        Route::resource('/data', 'DataController');
 
         //user
         Route::resource('/user', 'UserController');

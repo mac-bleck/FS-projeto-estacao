@@ -15,14 +15,14 @@ class CreateTableSensors extends Migration
     {
         Schema::create('sensors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('station_id');
+            $table->unsignedBigInteger('stations_id');
 
             $table->string('type');
             $table->string('partnumber')->nullable(true);
             $table->string('description')->nullable(true);
 
             $table->timestamps();
-            $table->foreign('station_id')->references('id')->on('stations');
+            $table->foreign('stations_id')->references('id')->on('stations');
         });
     }
 
