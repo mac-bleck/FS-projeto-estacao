@@ -26,7 +26,6 @@ class DataController extends Controller
      */
     public function index(Request $request)
     {
-        //(banner, notic, galery)
         try {
             
             if (!$request->has('sensors_id') && !$request->get('sensors_id')) {

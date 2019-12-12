@@ -26,7 +26,6 @@ class SensorsController extends Controller
      */
     public function index(Request $request)
     {
-        //(banner, notic, galery)
         try {
             
             $type = ($request->has('type') && $request->get('type')) ? [['type', 'like', $request->get('type').'%']] : [];
@@ -114,7 +113,33 @@ class SensorsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+
+        try {
+
+            $sensors = $this->sensors->findOrFail($id);
+
+            if ($request->has('stations_id') && $request->get('stations_id')){
+                $station = Stations::findOrFail($request->get('stations_id'));
+                
+                $sensors->stations_id = $station->id;
+                $sensors->save();
+
+                unset($data['stations_id']);
+            }
+
+            $sensors->update($data);
+
+            return response()->json([
+                'data' => [
+                    'msg' => 'Sensor atualizado com sucesso'
+                ]
+            ], 202);
+
+        } catch (\Exception $e) {
+            $msg = new ApiMessages($e->getMessage());
+            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+        }
     }
 
     /**
@@ -125,6 +150,21 @@ class SensorsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+
+            $sensors = $this->sensors->findOrFail($id);
+            $sensors->data()->delete();
+            $sensors->delete();
+
+            return response()->json([
+                'data' => [
+                    'msg' => 'Sensor deletado com sucesso'
+                ]
+            ], 200);
+
+        } catch (\Exception $e) {
+            $msg = new ApiMessages($e->getMessage());
+            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+        }
     }
 }
