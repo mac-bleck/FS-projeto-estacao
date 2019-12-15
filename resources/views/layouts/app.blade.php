@@ -30,8 +30,22 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ __('Home') }}
                 </a>
+
+                @isset($station_nav)
+                    <a class="navbar-brand" href="{{ route('main', ['station' => $station_nav->id]) }}">
+                        {{$station_nav->name}}
+                    </a>
+
+                    @isset($sensor_nav)
+                        <a class="navbar-brand" href="{{ route('main', ['station' => $station_nav->id]) }}">
+                            {{$sensor_nav}}
+                        </a>
+                    @endisset
+
+                @endisset
+                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

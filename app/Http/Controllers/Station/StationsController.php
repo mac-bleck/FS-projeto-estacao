@@ -62,10 +62,9 @@ class StationsController extends Controller
         $data = $request->all();
 
         try {
-            $user = User::findOrFail($request->get('user_id'));
 
-            $user->stations()->firstOrCreate([
-                        'name' => $request->get('name'),
+            auth()->user()->stations()->firstOrCreate([
+                        'name' => ucfirst(strtolower($request->get('name'))),
                         'locality' => $request->get('locality')
                     ]);
 
@@ -88,7 +87,8 @@ class StationsController extends Controller
         try {
 
             $station = auth()->user()->stations()->findOrFail($id);
-            $stations = $this->stations->with('sensors')
+            $stations = $this->stations->where('user_id', auth()->user()->id)
+                                       ->with('sensors')
                                        ->paginate(10);
             
             return view('station.stations', [
@@ -117,6 +117,8 @@ class StationsController extends Controller
         $data = $request->all();
 
         try {
+
+            $data['name'] = ucfirst(strtolower($data['name']));
 
             $stations = auth()->user()->stations()->findOrFail($id);
 

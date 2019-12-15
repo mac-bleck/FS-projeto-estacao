@@ -7,8 +7,6 @@
 
     @csrf
     
-    <input type="hidden" name="user_id" value="{{Auth::user()->id}}"/>
-    
     <div class="form-group row">
         <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 

@@ -79,7 +79,7 @@ class SensorsController extends Controller
             $station = Stations::findOrFail($request->get('station_id'));
 
             $station->sensors()->firstOrCreate([
-                    'type' => $request->get('type'),
+                    'type' => ucfirst(strtolower($request->get('type'))),
                     'partnumber' => $request->get('partnumber'),	
                     'description' => $request->get('description')
                     ]);
@@ -147,7 +147,8 @@ class SensorsController extends Controller
         $data = $request->all();
 
         try {
-
+            $data['type'] = ucfirst(strtolower($data['type']));
+            
             $sensor = $this->sensors->findOrFail($id);
 
             if ($request->has('station_id') && $request->get('station_id')){

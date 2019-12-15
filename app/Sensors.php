@@ -16,7 +16,7 @@ class Sensors extends Model
 
     public function station()
     {
-        return $this->belongsTo(Station::class);
+        return $this->belongsTo(Stations::class);
     }
 
     public function data()

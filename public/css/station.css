@@ -32,3 +32,19 @@
 .flex-direction-column{
     flex-direction: column;
 }
+
+.home-container{
+    margin-bottom: 10px;
+}
+
+.home-sensor{
+    cursor: pointer;
+}
+
+.sensor-grafic{
+    margin-bottom: 10px;
+}
+
+.sensor-form{
+    background-color: aqua;
+}

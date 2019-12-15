@@ -35,3 +35,18 @@ Route::namespace('Station')->middleware('auth')->group(function(){
     //user
     Route::resource('/user', 'UserController');
 });
+
+Route::namespace('Site')->middleware('auth')->group(function(){
+    
+    Route::get('/', 'HomeController@index')->name('home');
+
+    Route::get('/main', 'MainController@index')->name('main');
+
+    Route::get('/sensor', 'SensorController@index')->name('sensor.index');
+    Route::get('/sensor/{id}', 'SensorController@show')->name('sensor.show');
+});
+
+Route::get('teste', function(Request $request){
+    $datas = App\Data::paginate(10);
+    echo $datas->links();
+});

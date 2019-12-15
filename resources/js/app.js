@@ -13,3 +13,5 @@ require('./bootstrap');
  */
 
 require('./components/Example');
+require('./components/Grafic');
+require('./components/GraficMain');
