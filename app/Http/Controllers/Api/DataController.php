@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Station;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -56,7 +56,7 @@ class DataController extends Controller
      * @param  App\Http\Requests\Gerenciador\NewsRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DataRequest $request)
     {            
         try {
             

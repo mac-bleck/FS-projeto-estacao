@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Station;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,28 +27,14 @@ class SensorsController extends Controller
     public function index(Request $request)
     {
         try {
-            $station = auth()->user()->stations()->findOrFail($request->get('station'));
-        
+
             $type = ($request->has('type') && $request->get('type')) ? [['type', 'like', $request->get('type').'%']] : [];
             $pag = ($request->has('paginate') && $request->get('paginate')) ? $request->get('paginate') : '10';
 
-            $sensors = $this->sensors->where('stations_id', $station->id)
-                                     ->where($type)
+            $sensors = $this->sensors->where($type)
                                      ->paginate($pag);
-
-            return view('station.sensors', [
-                'station' => [
-                    'id' => $station->id,
-                    'name' => $station->name,
-                    'locality' => $station->locality,
-                ],
-                'sensors' => $sensors,
-                'id' => '',
-                'type' => '',
-                'partnumber' => '',
-                'description' => '',
-                'edit' => false
-            ]);
+                                     
+            return response()->json($sensors, 200); //registro criado
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
@@ -72,11 +58,11 @@ class SensorsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SensorsRequest $request)
     {
         try {
 
-            $station = Stations::findOrFail($request->get('station_id'));
+            $station = Stations::findOrFail($request->get('stations_id'));
 
             $station->sensors()->firstOrCreate([
                     'type' => $request->get('type'),
@@ -84,7 +70,11 @@ class SensorsController extends Controller
                     'description' => $request->get('description')
                     ]);
             
-            return redirect()->route('sensors.index', ['station' => $station->id]);
+            return response()->json([
+                'data' => [
+                    'msg' => 'Sensor criado com sucesso'
+                ]
+            ], 201); //registro criado
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
@@ -111,28 +101,7 @@ class SensorsController extends Controller
      */
     public function edit($id)
     {
-        try {
-            $sensor = $this->sensors->findOrFail($id);
-            $station = Stations::findOrFail($sensor->stations_id);
-
-            return view('station.sensors', [
-                'station' => [
-                    'id' => $station->id,
-                    'name' => $station->name,
-                    'locality' => $station->locality,
-                ],
-                'sensors' => $station->sensors,
-                'id' => $sensor->id,
-                'type' => $sensor->type,
-                'partnumber' => $sensor->partnumber,
-                'description' => $sensor->description,
-                'edit' => true
-            ]);
-
-        } catch (\Exception $e) {
-            $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
-        }
+        //
     }
 
     /**
@@ -148,20 +117,24 @@ class SensorsController extends Controller
 
         try {
 
-            $sensor = $this->sensors->findOrFail($id);
+            $sensors = $this->sensors->findOrFail($id);
 
-            if ($request->has('station_id') && $request->get('station_id')){
-                $station = Stations::findOrFail($request->get('station_id'));
-                        
-                $sensor->stations_id = $station->id;
-                $sensor->save();
+            if ($request->has('stations_id') && $request->get('stations_id')){
+                $station = Stations::findOrFail($request->get('stations_id'));
+                
+                $sensors->stations_id = $station->id;
+                $sensors->save();
 
-                unset($data['station_id']);
+                unset($data['stations_id']);
             }
 
-            $sensor->update($data);
+            $sensors->update($data);
 
-            return redirect()->route('sensors.index', ['station' => $request->get('station_id')]);
+            return response()->json([
+                'data' => [
+                    'msg' => 'Sensor atualizado com sucesso'
+                ]
+            ], 202);
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
@@ -175,17 +148,20 @@ class SensorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy($id)
     {
         try {
 
             $sensors = $this->sensors->findOrFail($id);
-            $station = $sensors->stations_id;
-
             $sensors->data()->delete();
             $sensors->delete();
 
-            return redirect()->route('sensors.index', ['station' => $station]);
+            return response()->json([
+                'data' => [
+                    'msg' => 'Sensor deletado com sucesso'
+                ]
+            ], 200);
+
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
             return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO

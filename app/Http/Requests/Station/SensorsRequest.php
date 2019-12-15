@@ -24,9 +24,9 @@ class SensorsRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => ['required', 'string', 'max:255'],
-            'partnumber' => ['string', 'max:255'],
-            'description' => ['string', 'max:255'],
+            'type' => ['required', 'string', 'max:15'],
+            'partnumber' => ['string', 'max:10'],
+            'description' => ['string', 'max:32'],
             'stations_id' => 'required'
         ];
     }

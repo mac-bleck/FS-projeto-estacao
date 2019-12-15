@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Station;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -28,27 +28,32 @@ class StationsController extends Controller
      */
     public function index(Request $request)
     {
+        dd($request->all());
         try {
+            
             $name = ($request->has('name') && $request->get('name')) ? [['name', 'like', $request->get('name').'%']] : [];
             $pag = ($request->has('paginate') && $request->get('paginate')) ? $request->get('paginate') : '10';
 
-            $stations = $this->stations->where('user_id', auth()->user()->id)
-                                       ->with('sensors')
+            $stations = $this->stations->with('sensors')
                                        ->where($name)
                                        ->paginate($pag);
    
-            return view('station.stations', [
-                'stations' => $stations,
-                'name' => '',
-                'locality' => '',
-                'edit' => false,
-                'id' => ''
-            ]);
+            return response()->json($stations, 200); //registro criado
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
             return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
         }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -60,7 +65,7 @@ class StationsController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
+        dd();
         try {
             $user = User::findOrFail($request->get('user_id'));
 
@@ -69,7 +74,31 @@ class StationsController extends Controller
                         'locality' => $request->get('locality')
                     ]);
 
-            return redirect()->route('stations.index');
+            return response()->json([
+                'data' => [
+                    'msg' => 'Estação criada com sucesso'
+                ]
+            ], 201); //registro criado
+
+        } catch (\Exception $e) {
+            $msg = new ApiMessages($e->getMessage());
+            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        try {
+            
+            $station = $this->stations->with('sensors')->findOrFail($id);
+
+            return view('station.sensors', ['station' => $station]);
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
@@ -118,10 +147,10 @@ class StationsController extends Controller
 
         try {
 
-            $stations = auth()->user()->stations()->findOrFail($id);
+            $stations = $this->stations->findOrFail($id);
 
             if ($request->has('user_id') && $request->get('user_id')){
-                $user = User::findOrFail($request->get('user_id'));
+                $user = Stations::findOrFail($request->get('user_id'));
                 
                 $stations->user_id = $user->id;
                 $stations->save();
@@ -131,7 +160,11 @@ class StationsController extends Controller
 
             $stations->update($data);
 
-            return redirect()->route('stations.index');
+            return response()->json([
+                'data' => [
+                    'msg' => 'Estação atualizada com sucesso'
+                ]
+            ], 202);
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
@@ -145,11 +178,11 @@ class StationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy($id)
     {
         try {
 
-            $stations = auth()->user()->stations()->findOrFail($id);
+            $stations = $this->stations->findOrFail($id);
             $sensors = $stations->sensors;
 
             foreach ($sensors as $sensor) {
@@ -160,7 +193,11 @@ class StationsController extends Controller
 
             $stations->delete();
 
-            return redirect()->route('stations.index');
+            return response()->json([
+                'data' => [
+                    'msg' => 'Estação deletado com sucesso'
+                ]
+            ], 200);
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());

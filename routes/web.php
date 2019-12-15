@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,4 +17,21 @@
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::namespace('Station')->middleware('auth')->group(function(){
+    
+    Route::get('/', 'HomeController@index')->name('home');
+
+    //sensors
+    Route::resource('/sensors', 'SensorsController');
+    Route::get('/sensors/{sensor}/delete', 'SensorsController@delete')->name('sensors.delete');
+
+    //stations
+    Route::resource('/stations', 'StationsController');
+    Route::get('/stations/{station}/delete', 'StationsController@delete')->name('stations.delete');
+
+    //data
+    Route::resource('/data', 'DataController');
+
+    //user
+    Route::resource('/user', 'UserController');
+});
