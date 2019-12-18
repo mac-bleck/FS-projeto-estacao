@@ -1,63 +1,108 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Line } from 'react-chartjs-2';
 
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'June', 'July', 'June', 'July'],
-  datasets: [
-    {
-      label: 'Temperatura',
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: 'rgba(75,192,192,0.4)',
-      borderColor: 'rgba(75,192,192,1)',
-      borderCapStyle: 'butt',
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: 'miter',
-      pointBorderColor: 'rgba(75,192,192,1)',
-      pointBackgroundColor: '#fff',
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-      pointHoverBorderColor: 'rgba(220,220,220,1)',
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-      data: [65, 59, 80, 81, 56, 55, 40, 30, 30, 80]
-    },
-    {
-      label: 'Temperatura',
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: 'rgba(75,192,192,0.4)',
-      borderColor: 'rgba(75,192,192,1)',
-      borderCapStyle: 'butt',
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: 'miter',
-      pointBorderColor: 'rgba(75,192,192,1)',
-      pointBackgroundColor: '#fff',
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-      pointHoverBorderColor: 'rgba(220,220,220,1)',
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-      data: [35, 65, 67, 88, 56, 67, 40, 30, 30, 80]
+import LineChart from './LineChart';
+
+import Comun from './Data/Comun';
+import Colors from './Data/Colors';
+
+const axios = require('axios');
+
+class GraficMain extends Component {
+  
+    constructor(props){
+        super(props);
+        this.state = {
+            graficData:{
+                labels:[],
+                datasets:[]
+            },
+            setType: '',
+            storeDatasets: {
+                labels:[],
+                datasets:[]
+            }
+        }
+
+        this.setDataGraficInit = this.setDataGraficInit.bind(this);
+        this.setNewData = this.setNewData.bind(this);
     }
-  ]
-};
 
-function GraficMain() {
-    return (
-        <Line 
-          data={data}
-          width={200}
-          height={62}
-        />                    
-    );
+    getData() {
+        let link = window.location.href;
+        link = link.split("/");
+        link = link[0] + "//" + link[2] + "/api/grafic/" + link[3];
+
+        return axios.get(link).then(res => {
+            return res.data;
+          })
+    }
+
+    async componentDidMount(){
+        
+        this.setDataGraficInit(await this.getData());
+
+        window.Echo.channel('value-sensor').listen('ValueSensor', (e) => {            
+            this.setNewData(e);            
+        });
+    }
+
+    setNewData(array){
+        let s = this.state;
+        
+        array.forEach((element, index) => {
+            if (typeof(element) == "string"){
+                if (s.graficData.labels.length < 20) {
+                    s.graficData.labels.push(element);                    
+                } else {
+                    s.graficData.labels.push(element);
+                    s.graficData.labels.shift();  
+                }                   
+            } else {
+                if (s.graficData.datasets[index].data.length < 20) {
+                    s.graficData.datasets[index].data.push(element.value)
+                    
+                } else {
+                    s.graficData.datasets[index].data.push(element.value)
+                    s.graficData.datasets[index].data.shift();
+                }
+            }
+        });
+
+        this.setState(s);
+    }
+
+    setDataGraficInit(array){
+        let s = this.state;
+        
+        for (let i = 0; i <= array.length - 1; i++) {
+
+            let info = {
+                label: array[i].label,
+                borderColor: Colors[i], //cor de fundo da borda
+                pointHoverBackgroundColor: Colors[i], //cor da bolinha ao passar o mouse na intercessão
+                data: array[i].data,
+                ...Comun
+            }
+
+            s.graficData.datasets.push(info);
+            s.graficData.labels = array[i].labels;
+            
+            s.setType = s.graficData.datasets[0].label;
+        }
+
+        this.setState(s);
+    }    
+
+    render() {
+        return (
+                    <LineChart
+                        datasets={this.state.graficData.datasets}
+                        labels={this.state.graficData.labels}
+                        height={270}
+                    />                   
+        );
+    }
 }
 
 export default GraficMain;
@@ -65,7 +110,3 @@ export default GraficMain;
 if (document.getElementById('grafic-main')) {
     ReactDOM.render(<GraficMain />, document.getElementById('grafic-main'));
 }
-
-/*
- 
-*/

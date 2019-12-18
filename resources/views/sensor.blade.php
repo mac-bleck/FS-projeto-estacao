@@ -18,7 +18,7 @@
                     <div id="grafic-sensor" class="card-body station-center"></div>
                 </div>
 
-                <div class="card sensor-filter">
+                <div class="card sensor-filter backgound">
                     <div class="card-body station-center">
                         
                     <!---->
@@ -56,7 +56,7 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-color6">
                                         {{ __('Pesquisar') }}
                                     </button>
                                 </div>
@@ -70,7 +70,7 @@
         </div>
         
         <div class="col-md-5">
-            <div class="card">
+            <div class="card backgound">
                 <div class="card-body">
                     <table class="table table-hover table-sm">
                         <thead>
@@ -94,7 +94,7 @@
                 </div>
                 
                 <div class="station-center">
-                    {{$datas->render()}}
+                    {{$datas->onEachSide(1)->render()}}
                 </div>
             </div>
         </div>

@@ -82,7 +82,9 @@ class SensorsController extends Controller
                     'type' => ucfirst(strtolower($request->get('type'))),
                     'partnumber' => $request->get('partnumber'),	
                     'description' => $request->get('description')
-                    ]);
+                    ])->data()->create([
+                        'value' => 0
+                        ]);;
             
             return redirect()->route('sensors.index', ['station' => $station->id]);
 

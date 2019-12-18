@@ -4,8 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+            <div class="card backgound">
+                <div class="card-header form-header">{{ __('Estações') }}</div>
 
                 <div class="card-body">
                     
@@ -46,7 +46,7 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a class="btn btn-primary" href="{{route('sensors.index', ['station' => $station->id])}}"> 
+                                            <a class="btn btn-color6" href="{{route('sensors.index', ['station' => $station->id])}}"> 
                                                 {{ __('Sensores') }}
                                             </a>
                                         </td>

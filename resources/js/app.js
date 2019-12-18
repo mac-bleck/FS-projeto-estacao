@@ -13,5 +13,6 @@ require('./bootstrap');
  */
 
 require('./components/Example');
-require('./components/Grafic');
+require('./components/GraficSensor');
 require('./components/GraficMain');
+require('./components/ValueSensor');

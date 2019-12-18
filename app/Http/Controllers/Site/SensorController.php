@@ -57,9 +57,11 @@ class SensorController extends Controller
             $sensor = Sensors::findOrFail($id);
             
             $station_nav = Stations::findOrFail($sensor->stations_id);
-            $sensor_nav = $sensor->type;
+            $sensor_nav = $sensor;
 
-            $datas = Data::where('sensors_id', $sensor->id)->where($date)->paginate(12);
+            $datas = Data::where('sensors_id', $sensor->id)->where($date)->orderBy('id','desc')->paginate(12);
+
+            $datas->appends($request->all());
 
             return view('sensor', compact(
                 'datas', 
@@ -71,6 +73,42 @@ class SensorController extends Controller
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
             return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+        }
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendDataSensor(Request $request, $id)
+    {
+        try {
+            $sensor = Sensors::findOrFail($id);
+            $dataInver = $sensor->data()->orderBy('id','desc')->take(15)->get();
+            
+            $datas = [];
+            for ($i = count($dataInver) - 1; $i >= 0; $i--) { 
+                $datas[] = $dataInver[$i];
+            }
+
+            $values = [];
+            $labels = [];
+            foreach ($datas as $key => $data) {
+                $labels[] = date("d/m/Y h:i:s", strtotime($data->created_at));
+                $values[] =  $data->value;
+            }
+            
+            $dataSensor[] = [$sensor->type];
+            $dataSensor[] = $values;
+            $dataSensor[] = $labels;
+
+            return response()->json($dataSensor, 200);
+            
+        } catch (\Exception $e) {
+            $msg = new ApiMessages($e->getMessage());
+            return response()->json($msg->getMessage(), 401);
         }
     }
 }

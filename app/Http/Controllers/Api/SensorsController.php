@@ -68,8 +68,10 @@ class SensorsController extends Controller
                     'type' => $request->get('type'),
                     'partnumber' => $request->get('partnumber'),	
                     'description' => $request->get('description')
-                    ]);
-            
+                    ])->data()->create([
+                        'value' => 0
+                        ]);
+
             return response()->json([
                 'data' => [
                     'msg' => 'Sensor criado com sucesso'

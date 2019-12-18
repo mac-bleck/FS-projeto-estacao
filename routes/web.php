@@ -30,7 +30,7 @@ Route::namespace('Station')->middleware('auth')->group(function(){
     Route::get('/stations/{station}/delete', 'StationsController@delete')->name('stations.delete');
 
     //data
-    Route::resource('/data', 'DataController');
+    //Route::resource('/data', 'DataController');
 
     //user
     Route::resource('/user', 'UserController');
@@ -44,9 +44,7 @@ Route::namespace('Site')->middleware('auth')->group(function(){
 
     Route::get('/sensor', 'SensorController@index')->name('sensor.index');
     Route::get('/sensor/{id}', 'SensorController@show')->name('sensor.show');
-});
 
-Route::get('teste', function(Request $request){
-    $datas = App\Data::paginate(10);
-    echo $datas->links();
+    Route::get('/data', 'DataController@index')->name('data.index');
+    Route::get('/form', 'DataController@show')->name('data.show');
 });

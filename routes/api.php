@@ -36,3 +36,14 @@ Route::namespace('Api')->group(function(){
     });
 });
 */
+
+Route::namespace('Site')->group(function(){
+
+    Route::get('/grafic/main', 'MainController@sendDataGrafic')->name('main.sendDataGrafic');
+    Route::get('/sensor/main', 'MainController@sendDataSensor')->name('main.sendDataSensor');
+
+    Route::get('/sensor/{id}', 'SensorController@sendDataSensor')->name('sensor.sendDataSensor');
+    
+    Route::post('/data', 'DataController@store')->name('data.store');
+});
+
