@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<!--<div id="example" >
-    
-</div>-->
+
 <div class="container">
     <div class="row justify-content-center">
 
@@ -12,60 +10,57 @@
             <div class="column justify-content-center">
 
                 <div class="card sensor-grafic">
-                    <!--<div class="card-header station-center flex-direction-column">
-                        <i>Grafico</i>
-                    </div>-->
                     <div id="grafic-sensor" class="card-body station-center"></div>
                 </div>
 
-                <div class="card sensor-filter backgound">
-                    <div class="card-body station-center">
-                        
-                    <!---->
-                    <div class="col-md-8">
-                        <form method="GET" action="{{ route('sensor.show', ['id' => $sensor->id]) }}" id="form-station">
-                            @csrf
+                <div class="card sensor-filter sensor-grafic backgound">
+                    <div class="card-body ">
+                        <div class="col-md-12">
+                            <form method="GET" action="{{ route('sensor.show', ['id' => $sensor->id]) }}" id="form-pesqui">
+                                @csrf
 
-                            <!--<div class="form-group row">
-                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                                <div class="form-group form-group-pesqui row">
+                                    <label for="date" class="col-md-2 col-form-label text-md-right">{{ __('Data') }}</label>
 
-                                <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="" required autofocus>
-                                    
-                                    @error('name')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <div class="col-md-7">
+                                        <input id="date" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="" required>
+
+                                        @error('date')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-color6">
+                                            {{ __('Pesquisar') }}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>-->
-
-                            <div class="form-group row">
-                                <label for="date" class="col-md-2 col-form-label text-md-right">{{ __('Data') }}</label>
-
-                                <div class="col-md-8">
-                                    <input id="date" type="date" class="form-control @error('date') is-invalid @enderror" name="date" value="" required>
-
-                                    @error('date')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-color6">
-                                        {{ __('Pesquisar') }}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>    
-                    <!---->
+                            </form>
+                        </div>
                     </div>
                 </div>
+
+                <div class="card backgound">
+                    <div class="card-body station-center">
+                        <div class="col-md-8">
+                            <form method="POST" action="{{ route('sensor.download', ['id' => $sensor->id]) }}" id="form-down">
+                                @csrf
+
+                                <div class="form-group form-group-pesqui row">
+                                    <label for="date" class="col-md-10 col-form-label text-md-right">{{ __('Download de todos os dados deste sensor') }}</label>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-color6">
+                                            {{ __('Baixar') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         

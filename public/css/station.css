@@ -5,13 +5,14 @@
 #fundo-externo {
     background-image: url('./../img/bg1.jpg');
     background-repeat: no-repeat;
-    background-size:100%;
+    background-size:cover;
+    background-attachment: fixed;
+    height: 100vh;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     top: 0;
-    background-size: cover;
 }
 
 .color{
@@ -147,4 +148,13 @@
 .page-item.active .page-link{
     background-color: rgba(113,179,124,0.9) !important;
     border: 1px solid rgba(113,179,124,0.9);
+}
+
+.down{
+    background-color: #555;
+    margin-bottom: 0;
+}
+
+.form-group-pesqui {
+    margin-bottom: 0;
 }

@@ -10,41 +10,6 @@ use App\Api\ApiMessages;
 
 class DataController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        try {
-   
-            $datas = Data::paginate(10);
-
-            return view('data.data', compact('datas'));
-
-        } catch (\Exception $e) {
-            $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
-        }
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request)
-    {
-        try {
-   
-            return view('data.form');
-
-        } catch (\Exception $e) {
-            $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
-        }
-    }
 
     /**
      * Store a newly created resource in storage.

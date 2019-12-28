@@ -8,39 +8,11 @@ use App\Sensors;
 use App\Data;
 use App\Stations;
 use App\Api\ApiMessages;
+use App\Exports\DataExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SensorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        try {
-        
-            $type = ($request->has('type') && $request->get('type')) ? [['type', 'like', $request->get('type').'%']] : [];
-            $pag = ($request->has('paginate') && $request->get('paginate')) ? $request->get('paginate') : '10';
-
-            $sensors = $this->sensors->where('stations_id', $station->id)
-                                     ->where($type)
-                                     ->paginate($pag);
-
-            return view('sensor', [
-                'sensors' => $sensors,
-                'id' => '',
-                'type' => '',
-                'partnumber' => '',
-                'description' => '',
-                'edit' => false
-            ]);
-
-        } catch (\Exception $e) {
-            $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
-        }
-    }
 
     /**
      * Display the specified resource.
@@ -85,6 +57,7 @@ class SensorController extends Controller
     public function sendDataSensor(Request $request, $id)
     {
         try {
+
             $sensor = Sensors::findOrFail($id);
             $dataInver = $sensor->data()->orderBy('id','desc')->take(15)->get();
             
@@ -106,6 +79,27 @@ class SensorController extends Controller
 
             return response()->json($dataSensor, 200);
             
+        } catch (\Exception $e) {
+            $msg = new ApiMessages($e->getMessage());
+            return response()->json($msg->getMessage(), 401);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function downloadData(Request $request)
+    {
+        try {
+
+            $sensor = Sensors::findOrFail($request->get('id'));
+
+            $arqui = 'Sensor_'.$sensor->id.'_data.xlsx';
+
+            return Excel::download(new DataExport($sensor->id), $arqui);
+
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
             return response()->json($msg->getMessage(), 401);

@@ -23,10 +23,10 @@
     <link rel="shortcut icon" href="">
 
 </head>
-<body>
+<body id="fundo-externo">
     
     <div id="app">
-        <div id="fundo-externo"></div>
+        
         @auth
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm backgound">
             <div class="container">

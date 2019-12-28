@@ -13,14 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 /*
 Route::namespace('Api')->group(function(){
 
     Route::prefix('station')->group(function(){
+        
         //sensors
         Route::resource('/sensors', 'SensorsController');
 
@@ -39,11 +36,17 @@ Route::namespace('Api')->group(function(){
 
 Route::namespace('Site')->group(function(){
 
+    //dados do grafico da pagina main de cada estação
     Route::get('/grafic/main', 'MainController@sendDataGrafic')->name('main.sendDataGrafic');
+
+    //dados dos sensores da pagina main de cada estação
     Route::get('/sensor/main', 'MainController@sendDataSensor')->name('main.sendDataSensor');
 
+    //dados do grafico do sensor especifico
     Route::get('/sensor/{id}', 'SensorController@sendDataSensor')->name('sensor.sendDataSensor');
     
+    //rota para a chegada de dados mandodos pelo nodemcu
     Route::post('/data', 'DataController@store')->name('data.store');
+
 });
 

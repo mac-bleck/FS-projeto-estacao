@@ -11,15 +11,9 @@ use Illuminate\Http\Request;
 |
 */
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
-
 Auth::routes();
 
 Route::namespace('Station')->middleware('auth')->group(function(){
-    
-    Route::get('/', 'HomeController@index')->name('home');
 
     //sensors
     Route::resource('/sensors', 'SensorsController');
@@ -29,22 +23,21 @@ Route::namespace('Station')->middleware('auth')->group(function(){
     Route::resource('/stations', 'StationsController');
     Route::get('/stations/{station}/delete', 'StationsController@delete')->name('stations.delete');
 
-    //data
-    //Route::resource('/data', 'DataController');
-
     //user
     Route::resource('/user', 'UserController');
+
 });
 
 Route::namespace('Site')->middleware('auth')->group(function(){
     
+    //pagina home
     Route::get('/', 'HomeController@index')->name('home');
 
+    //pagina main
     Route::get('/main', 'MainController@index')->name('main');
 
-    Route::get('/sensor', 'SensorController@index')->name('sensor.index');
+    //pagina de sensores
     Route::get('/sensor/{id}', 'SensorController@show')->name('sensor.show');
-
-    Route::get('/data', 'DataController@index')->name('data.index');
-    Route::get('/form', 'DataController@show')->name('data.show');
+    Route::post('/sensor/download', 'SensorController@downloadData')->name('sensor.download');
+    
 });
