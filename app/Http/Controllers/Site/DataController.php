@@ -49,11 +49,10 @@ class DataController extends Controller
             broadcast(new \App\Events\ValueSensor($values));
 
             return response()->json(['msg' => 'ok'], 201); 
-            //return view('data.form'); //registro criado
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 }

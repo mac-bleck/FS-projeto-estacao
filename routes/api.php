@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-/*
+
 Route::namespace('Api')->group(function(){
 
     Route::prefix('station')->group(function(){
@@ -32,7 +32,7 @@ Route::namespace('Api')->group(function(){
 
     });
 });
-*/
+
 
 Route::namespace('Site')->group(function(){
 
@@ -46,7 +46,7 @@ Route::namespace('Site')->group(function(){
     Route::get('/sensor/{id}', 'SensorController@sendDataSensor')->name('sensor.sendDataSensor');
     
     //rota para a chegada de dados mandodos pelo nodemcu
-    Route::post('/data', 'DataController@store')->name('data.store');
+    Route::post('/data', 'DataController@store')->name('data.store')->middleware('auth.token');
 
 });
 

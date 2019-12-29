@@ -8,6 +8,7 @@ use App\User;
 use App\Api\ApiMessages;
 use App\Http\Requests\Station\UserRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
@@ -37,18 +38,8 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -64,7 +55,9 @@ class UserController extends Controller
         try {
             
             $data['password'] = bcrypt($data['password']);
-            $user = $this->user->create($data);
+            $data['writing_token'] = Crypt::encrypt($data['email'].";".date('YmdHms'));
+
+            $this->user->create($data);
 
             return response()->json([
                 'data' => [
@@ -74,7 +67,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -89,14 +82,14 @@ class UserController extends Controller
         try {
             
             $user = $this->user->findOrFail($id);
-
+        
             return response()->json([
                 'data' => $user
             ], 200);
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -148,7 +141,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -173,7 +166,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 }

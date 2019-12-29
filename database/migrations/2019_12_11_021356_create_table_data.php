@@ -15,12 +15,12 @@ class CreateTableData extends Migration
     {
         Schema::create('data', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('sensor_id');
+            $table->unsignedBigInteger('sensors_id');
 
             $table->string('value');
 
             $table->timestamps();
-            $table->foreign('sensor_id')->references('id')->on('sensors');
+            $table->foreign('sensors_id')->references('id')->on('sensors');
         });
     }
 
