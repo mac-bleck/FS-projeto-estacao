@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import LineChart from './LineChart';
+import CircularIndeterminate from './CircularIndeterminate/CircularIndeterminate';
 
 import Comun from './Data/Comun';
 import Colors from './Data/Colors';
@@ -16,6 +17,7 @@ class GraficSensor extends Component{
                 labels:[],
                 datasets:[]
             },
+            isFetching: true
         }
 
         this.setDataGraficInit = this.setDataGraficInit.bind(this);
@@ -25,7 +27,6 @@ class GraficSensor extends Component{
     getData() {
         let link = window.location.href;
         link = link.split("/");
-        //["http:", "", "localhost:8000", "sensor", "7"]
         link = link[0] + "//" + link[2] + "/api/" + link[3] + "/" + link[4];
         
         return axios.get(link).then(res => {
@@ -74,7 +75,8 @@ class GraficSensor extends Component{
         s.graficData.datasets.push(info);
         s.graficData.labels = array[2];
 
-        this.setState(s);        
+        s.isFetching = false;
+        this.setState(s);
     } 
 
     async componentDidMount(){        
@@ -87,11 +89,14 @@ class GraficSensor extends Component{
 
     render() {
       return (
-            <LineChart
-                datasets={this.state.graficData.datasets}
-                labels={this.state.graficData.labels}
-                height={270}
-            />                  
+            <>
+                {this.state.isFetching && <CircularIndeterminate />}
+                {!this.state.isFetching && <LineChart
+                    datasets={this.state.graficData.datasets}
+                    labels={this.state.graficData.labels}
+                    height={270}
+                />}
+            </>                  
       );
     }
 }

@@ -57,6 +57,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .form-header{
@@ -74,6 +75,7 @@
 
 .home-sensor{
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .sensor-grafic{
@@ -157,4 +159,55 @@
 
 .form-group-pesqui {
     margin-bottom: 0;
+}
+
+/* config */
+
+.back{
+    border:none;
+    background-color: transparent;
+}
+
+.user-info{
+    padding: 0;
+}
+
+.user-info p{
+    margin-bottom: 10px;
+}
+
+.teste{
+    background-color:#456;
+}
+
+.info-user-div{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.break{
+    word-wrap: break-word;
+}
+
+.row-info{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    margin-bottom: 7px;
+}
+
+.info-title{
+    font-weight: bold;
+    text-align: right;
+}
+
+.info-body{
+    font-size: 12px;
+}
+
+.new-card-body{
+    padding: 0;
 }

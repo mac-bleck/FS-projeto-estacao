@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import CircularIndeterminate from './CircularIndeterminate/CircularIndeterminate';
 
 import ClassColors from './Data/ClassColors';
 
@@ -11,7 +12,8 @@ class ValueSensor extends Component {
         super(props);
         this.state = {
             data:[],
-            sizeClass: 'col-md-2'
+            sizeClass: 'col-md-2',
+            isFetching: true
         }
 
         this.setClassMd = this.setClassMd.bind(this);
@@ -46,8 +48,9 @@ class ValueSensor extends Component {
         for (let i = 0; i <= array.length - 1; i++) {
             dados.push(array[i]);
         }
-
+        
         s.data = dados;
+        s.isFetching = false;
         this.setState(s);
     }
 
@@ -76,27 +79,43 @@ class ValueSensor extends Component {
 
     render(){
         return (
-            <div className="row justify-content-center">
-                {this.state.data.map((v, k)=>{
-                    return (
-                        <div
-                            key={k} 
-                            className={this.state.sizeClass} 
-                            onClick={() => window.location.href= "http://" + window.location.host + "/sensor/" + v.sensor_id}>
-                            
-                            <div className="{card home-sensor backgound">
-                                <div className="card-body station-center">
-                                    <h3 className="main-value">{v.value}</h3>
-                                </div>
+            <>
+                { this.state.isFetching &&  (<div className="row justify-content-center">
+                                                <div className={this.state.sizeClass} >
+                                                    <div className="card home-sensor backgound">
+                                                        <div className="card-body station-center">
+                                                            <CircularIndeterminate />
+                                                        </div>
+                                                        <div className={"card-header station-center " + ClassColors[0]}>
+                                                            <i className="color">Carregando...</i>
+                                                        </div>               
+                                                    </div>
+                                                </div>
+                                            </div>)
+                }
+                
+                { !this.state.isFetching && <div className="row justify-content-center">
+                    {this.state.data.map((v, k)=>{
+                        return (
+                            <div
+                                key={k} 
+                                className={this.state.sizeClass} 
+                                onClick={() => window.location.href= "http://" + window.location.host + "/sensor/" + v.sensor_id}>
                                 
-                                <div className={"card-header station-center " + ClassColors[k]}>
-                                    <i className="color">{v.type}</i>
-                                </div>                
+                                <div className="card home-sensor backgound">
+                                    <div className="card-body station-center">
+                                        <h3 className="main-value">{v.value}</h3>
+                                    </div>
+                                    
+                                    <div className={"card-header station-center " + ClassColors[k]}>
+                                        <i className="color">{v.type}</i>
+                                    </div>                
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
-            </div>
+                        );
+                    })}
+                </div> }
+            </>
         )
     }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import CircularIndeterminate from './CircularIndeterminate/CircularIndeterminate';
 
 import LineChart from './LineChart';
 
@@ -18,10 +19,7 @@ class GraficMain extends Component {
                 datasets:[]
             },
             setType: '',
-            storeDatasets: {
-                labels:[],
-                datasets:[]
-            }
+            isFetching: true
         }
 
         this.setDataGraficInit = this.setDataGraficInit.bind(this);
@@ -35,7 +33,7 @@ class GraficMain extends Component {
 
         return axios.get(link).then(res => {
             return res.data;
-          })
+        });
     }
 
     async componentDidMount(){
@@ -68,7 +66,7 @@ class GraficMain extends Component {
                 }
             }
         });
-
+        
         this.setState(s);
     }
 
@@ -90,17 +88,21 @@ class GraficMain extends Component {
             
             s.setType = s.graficData.datasets[0].label;
         }
-
+        
+        s.isFetching = false;
         this.setState(s);
     }    
 
     render() {
         return (
-                    <LineChart
-                        datasets={this.state.graficData.datasets}
-                        labels={this.state.graficData.labels}
-                        height={270}
-                    />                   
+            <>
+                {this.state.isFetching && <CircularIndeterminate />}
+                {!this.state.isFetching && <LineChart
+                    datasets={this.state.graficData.datasets}
+                    labels={this.state.graficData.labels}
+                    height={270}
+                />}                   
+            </>
         );
     }
 }

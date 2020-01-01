@@ -39,5 +39,8 @@ Route::namespace('Site')->middleware('auth')->group(function(){
     //pagina de sensores
     Route::get('/sensor/{id}', 'SensorController@show')->name('sensor.show');
     Route::post('/sensor/download', 'SensorController@downloadData')->name('sensor.download');
+
+    //config
+    Route::get('/config', 'ConfigController@index')->name('config');
     
 });

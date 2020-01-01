@@ -4,26 +4,35 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Api\ApiMessages;
 use App\User;
-
-class HomeController extends Controller
+use App\Api\ApiMessages;
+class ConfigController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            
+
             $user_id = auth()->user()->id;
 
             $stations = auth()->user()->stations;
-            
-            return view('home', compact('stations', 'user_id'));
-            
+            $datas = [];
+
+            foreach ($stations as $station) {
+                $data = [];
+                foreach ($station->sensors as $sensor) {
+                   $data[] = [$sensor->type, $sensor->data->count()];
+                }
+
+                $datas[$station->name] = $data;
+            }
+
+            return view('config', compact('stations', 'datas', 'user_id'));
+
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
             return response()->json($msg->getMessage(), 401);
@@ -35,16 +44,14 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendStations($id)
+    public function sendUserInfo($id)
     {
         try {
-            
+
             $user = User::findOrFail($id);
 
-            $stations = $user->stations;
-            
-            return response()->json($stations, 200);
-            
+            return response()->json($user, 200);
+
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
             return response()->json($msg->getMessage(), 401);

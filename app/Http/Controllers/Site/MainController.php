@@ -17,10 +17,11 @@ class MainController extends Controller
     public function index(Request $request)
     {
         try {
+            $user_id = auth()->user()->id;
             $station_nav = auth()->user()->stations->find($request->get('station'));
             $sensors = $station_nav->sensors;
 
-            return view('main', compact('sensors', 'station_nav'));
+            return view('main', compact('sensors', 'station_nav', 'user_id'));
             
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());

@@ -23,7 +23,7 @@ class SensorController extends Controller
     public function show(Request $request, $id)
     {
         try {
-
+            $user_id = auth()->user()->id;
             $date = ($request->has('date') && $request->get('date')) ? [['created_at', 'like', $request->get('date').'%']] : [];
 
             $sensor = Sensors::findOrFail($id);
@@ -39,12 +39,13 @@ class SensorController extends Controller
                 'datas', 
                 'sensor', 
                 'station_nav',
-                'sensor_nav'
+                'sensor_nav',
+                'user_id'
             ));
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 

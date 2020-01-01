@@ -37,7 +37,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -74,7 +74,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -96,7 +96,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -148,7 +148,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -173,7 +173,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 }

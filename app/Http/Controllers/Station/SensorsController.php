@@ -27,6 +27,7 @@ class SensorsController extends Controller
     public function index(Request $request)
     {
         try {
+            $user_id = auth()->user()->id;
             $station = auth()->user()->stations()->findOrFail($request->get('station'));
         
             $type = ($request->has('type') && $request->get('type')) ? [['type', 'like', $request->get('type').'%']] : [];
@@ -47,7 +48,8 @@ class SensorsController extends Controller
                 'type' => '',
                 'partnumber' => '',
                 'description' => '',
-                'edit' => false
+                'edit' => false,
+                'user_id' => $user_id
             ]);
 
         } catch (\Exception $e) {
@@ -74,7 +76,7 @@ class SensorsController extends Controller
                     'description' => $request->get('description')
                     ])->data()->create([
                         'value' => 0
-                        ]);;
+                        ]);
             
             return redirect()->route('sensors.index', ['station' => $station->id]);
 
@@ -93,6 +95,7 @@ class SensorsController extends Controller
     public function edit($id)
     {
         try {
+            $user_id = auth()->user()->id;
             $sensor = $this->sensors->findOrFail($id);
             $station = Stations::findOrFail($sensor->stations_id);
 
@@ -107,12 +110,13 @@ class SensorsController extends Controller
                 'type' => $sensor->type,
                 'partnumber' => $sensor->partnumber,
                 'description' => $sensor->description,
-                'edit' => true
+                'edit' => true,
+                'user_id' => $user_id
             ]);
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -147,7 +151,7 @@ class SensorsController extends Controller
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -170,7 +174,7 @@ class SensorsController extends Controller
             return redirect()->route('sensors.index', ['station' => $station]);
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 }

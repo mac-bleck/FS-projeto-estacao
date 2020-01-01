@@ -45,6 +45,12 @@ Route::namespace('Site')->group(function(){
     //dados do grafico do sensor especifico
     Route::get('/sensor/{id}', 'SensorController@sendDataSensor')->name('sensor.sendDataSensor');
     
+    //dados do grafico do sensor especifico
+    Route::get('/home/stations/{id}', 'HomeController@sendStations')->name('home.sendStations');
+
+    //dados do usuario
+    Route::get('/config/{id}', 'ConfigController@sendUserInfo')->name('config.sendUserInfo');
+    
     //rota para a chegada de dados mandodos pelo nodemcu
     Route::post('/data', 'DataController@store')->name('data.store')->middleware('auth.token');
 

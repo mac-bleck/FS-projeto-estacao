@@ -29,6 +29,8 @@ class StationsController extends Controller
     public function index(Request $request)
     {
         try {
+            $user_id = auth()->user()->id;
+
             $name = ($request->has('name') && $request->get('name')) ? [['name', 'like', $request->get('name').'%']] : [];
             $pag = ($request->has('paginate') && $request->get('paginate')) ? $request->get('paginate') : '10';
 
@@ -42,12 +44,13 @@ class StationsController extends Controller
                 'name' => '',
                 'locality' => '',
                 'edit' => false,
-                'id' => ''
+                'id' => '',
+                'user_id' => $user_id
             ]);
 
         } catch (\Exception $e) {
             $msg = new ApiMessages($e->getMessage());
-            return response()->json($msg->getMessage(), 401); //COLOCAR O CODIGO DE RESPOSTA CERTO
+            return response()->json($msg->getMessage(), 401);
         }
     }
 
@@ -85,7 +88,7 @@ class StationsController extends Controller
     public function edit($id)
     {
         try {
-
+            $user_id = auth()->user()->id;
             $station = auth()->user()->stations()->findOrFail($id);
             $stations = $this->stations->where('user_id', auth()->user()->id)
                                        ->with('sensors')
@@ -96,7 +99,8 @@ class StationsController extends Controller
                 'name' => $station->name,
                 'locality' => $station->locality,
                 'edit' => true,
-                'id' => $station->id
+                'id' => $station->id,
+                'user_id' => $user_id
             ]);
 
         } catch (\Exception $e) {
